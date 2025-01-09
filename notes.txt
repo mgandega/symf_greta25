@@ -1,1 +1,27 @@
-a
+- conference
+    - titre, description, lieu, prix, date, date
+
+    CRUD (C create , R read , U update, D delete)
+
+    // creation du projet:
+    - symfony new symf_greta25 --webapp
+    - composer create-project symfony/skeleton:"7.2.x" my_project_directory
+    + cd my_project_directory
+        composer require webapp
+
+    // configurer la base de données
+    - aller dans le fichier .env qui est à la racine du site puis decommenter la ligne (DATABASE_URL) où se trouve mysql
+    
+    // création de la base de données
+    bin/console doctrine:database:create
+
+    // creation de l'entité
+    - bin/console make:entity
+    - bin/console make:migrate (m:m)
+    - bin/console doctrine:migrations:migrate (d:m:m)
+
+    // création d'un formulaire d'ajout
+    - bin/console make:form
+
+    // création d'un controller 
+    

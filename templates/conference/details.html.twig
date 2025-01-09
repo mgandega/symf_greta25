@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ConferenceController!{% endblock %}
+
+{% block body %}
+
+<div class="container">
+<div class="row">
+    <div class="col-sm-3">
+    <h5>{{ conference.titre}}</h5>
+    <p>{{ conference.description}}</p>
+    <p><b>lieu:</b> {{ conference.lieu}}</p>
+    <p><b>prix:</b> {{ conference.prix}}</p>
+    <p>{{ conference.date|date("d m Y h:i:s")}}</p>
+    <a href="{{ path('app_conference.edit', {'id':conference.id})}}">modifier</a>
+    </div>
+</div>
+</div>
+{% endblock %}
