@@ -1,0 +1,6 @@
+- créons une entité catégorie avec comme attribut "nom"
+- créons une relation de type manyTomany entre l'entité evenement et l'entité catégorie
+- ajoutons dans le champs nom de catégorie les valeurs suivantes : conference, meetings et réunion
+- une catégorie est liée à un à plusieurs evenements
+- un evenement est lié à un à plusieurs categories
+- affichons dans la partie gauche de la page les différentes catégories et faisons de sorte qu'on puisse afficher des evenements par categorie

@@ -17,6 +17,7 @@ class ConferenceType extends AbstractType
             ->add('description')
             ->add('lieu')
             ->add('prix')
+            ->add('image',ImageType::class)
             ->add('date', null, [
                 'widget' => 'single_text',
             ])

@@ -30,6 +30,7 @@ class ConferenceController extends AbstractController
 
         // si le formulaire est soummis et que le formulaire est valide
         if($form->isSubmitted()){
+            // dd($conference);
             // $this->em->getRepository(conference::class);
             $this->em->persist($conference);
             $this->em->flush();
@@ -83,5 +84,14 @@ class ConferenceController extends AbstractController
         return $this->render('conference/add.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+    #[Route('/conferences/supprimer/{id}', name: 'app_conference.supprimer')]
+    public function supprimer($id, Request $request, ConferenceRepository $repo): Response
+    {
+        $conference = $repo->find($id);
+        // $this->em->getRepository(Conference::class)->findAll();
+        $this->em->remove($conference);
+        $this->em->flush();
+        return $this->redirectToRoute('app_conference.conferences');
     }
 }
