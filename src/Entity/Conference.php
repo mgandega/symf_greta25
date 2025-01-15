@@ -3,10 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\ConferenceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Conference
 {
     #[ORM\Id]
@@ -14,9 +18,21 @@ class Conference
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Length(
+        min: 4,
+        max: 50,
+        minMessage: 'le titre doit avoir au minimum {{ limit }} caractères',
+        maxMessage: 'le titre ne doit pas avoir plus  {{ limit }} caractères'
+        )]
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
+    #[Assert\Length(
+        min: 20,
+        max: 250,
+        minMessage: 'la description doit avoir au minimum de {{ limit }} caractères',
+        maxMessage: 'la description ne doit pas avoir plus de  {{ limit }} caractères'
+        )]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
@@ -29,8 +45,38 @@ class Conference
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
+    #[Assert\Valid]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Image $image = null;
+
+    /**
+     * @var Collection<int, categorie>
+     */
+    #[ORM\ManyToMany(targetEntity: Categorie::class, inversedBy: 'conferences')]
+    private Collection $categorie;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'conference')]
+    private Collection $reservations;
+
+    /**
+     * @var Collection<int, Commentaire>
+     */
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'conference')]
+    private Collection $commentaires;
+
+    #[ORM\Column]
+    private ?int $nbReservation = 0;
+
+
+    public function __construct()
+    {
+        $this->categorie    = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -107,5 +153,113 @@ class Conference
         $this->image = $image;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, categorie>
+     */
+    public function getCategorie(): Collection
+    {
+        return $this->categorie;
+    }
+
+    public function addCategorie(categorie $categorie): static
+    {
+        if (!$this->categorie->contains($categorie)) {
+            $this->categorie->add($categorie);
+        }
+
+        return $this;
+    }
+
+    public function removeCategorie(categorie $categorie): static
+    {
+        $this->categorie->removeElement($categorie);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setConference($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getConference() === $this) {
+                $reservation->setConference(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): static
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires->add($commentaire);
+            $commentaire->setConference($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): static
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getConference() === $this) {
+                $commentaire->setConference(null);
+            }
+        }
+
+        return $this;
+    }
+
+    // #[ORM\PostPersist]
+    // public function ajout(){
+    //     dd('message à afficher avant l\'ajout');
+    // }
+
+
+    
+    public function getNbReservation(): ?int
+    {
+        return $this->nbReservation;
+    }
+    
+    public function setNbReservation(int $nbReservation): static
+    {
+        
+        $this->nbReservation = $nbReservation;
+        
+        return $this;
+    }
+    public function increaseReservation(){
+       
+        $this->nbReservation++ ;
     }
 }

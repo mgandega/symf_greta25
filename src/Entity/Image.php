@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
@@ -13,11 +15,31 @@ class Image
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\Length(
+        min: 20,
+        max: 50,
+        minMessage: 'la description doit avoir au minimum de {{ limit }} caractères',
+        maxMessage: 'la description ne doit pas avoir plus de  {{ limit }} caractères'
+        )]
     #[ORM\Column(length: 255)]
     private ?string $alt = null;
 
+    #[Assert\Length(
+        min: 10,
+        max: 50,
+        minMessage: 'la description doit avoir au minimum de {{ limit }} caractères',
+        maxMessage: 'la description ne doit pas avoir plus de  {{ limit }} caractères'
+        )]
     #[ORM\Column(length: 255)]
     private ?string $url = null;
+
+    #[Assert\File(
+        maxSize: '1024k',
+        extensions: ['pdf'],
+        extensionsMessage: 'Please upload a valid PDF',
+    )]
+    private UploadedFile $file ;
+
 
     public function getId(): ?int
     {
@@ -44,6 +66,18 @@ class Image
     public function setUrl(string $url): static
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile(uploadedFile $file): static
+    {
+        $this->file = $file;
 
         return $this;
     }

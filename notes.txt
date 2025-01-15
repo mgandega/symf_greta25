@@ -24,4 +24,21 @@
     - bin/console make:form
 
     // création d'un controller 
+
+// fixtures
+les fixtures permettent de generer des objets avec leurs relations , ces fixtures combinées avec la librairie faker permettent de fournir ces objets de fausses données .
+
+pour commencer avec les fixtures : 
+ - il faut d'abord l'installer : composer require doctrine/doctrine-fixtures-bundle
+ - pour installer faker : composer require fakerphp/faker
+Pour faker il est préférable d'aller sur le site de packagist.org (où se trouve presque toutes les librairies de php) pour pouvoir avoir une aperçue sur la librairie en question.
+ - pour chaque tour de boucle on ajoute une réference avec addReference() pour identifier l'entité,  cette methode prend comme premier parametre le nom de la référence et en deuxieme parametre l'objet de l'entité , cette réference sera récuperée par l'objet (par exemple conference) qui depend  de cet objet (image par exemple) et ainsi de suite
+
+ // les evenements sont des evenement qui se declenche avant ou apres l'ajout d'une entité, avant ou apres la suppression d'une entité
+
+ - prepersist : avant la persistance des données
+ - postpersist : apres la persistance des données
+ - preremove : avant la suppression des données
+ - postremove : apres la suppression des données
+
     

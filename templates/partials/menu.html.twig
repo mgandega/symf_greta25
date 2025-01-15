@@ -1,0 +1,9 @@
+<div>
+<ul>
+    {% for categorie in categories %}
+    <li>
+   <a href="{{ path('app_conference.categorie', {'nom':categorie.nom}) }}"> {{ categorie.nom }} </a>
+    </li>
+    {% endfor %}
+    </ul>
+</div>

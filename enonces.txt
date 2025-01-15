@@ -4,3 +4,6 @@
 - une catégorie est liée à un à plusieurs evenements
 - un evenement est lié à un à plusieurs categories
 - affichons dans la partie gauche de la page les différentes catégories et faisons de sorte qu'on puisse afficher des evenements par categorie
+
+- creons une entité reservation qui contient comme attribut contenu, date (date de la reservation)
+- pour la relation : une reservation est liée à une conference et une conference peut avoir plusieurs réservations . ManyToOne (Many reservation pour One conference)

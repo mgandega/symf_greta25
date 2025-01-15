@@ -20,8 +20,9 @@
         <li>3</li>
         </ul>
         {% endblock %}
-        {% block contenu2 %}
-        hello2
+        {% block menu %}
+        {{ render(controller(
+        'App\\Controller\\ConferenceController::menu')) }}
         {% endblock %}
 
         {% block javascripts %}

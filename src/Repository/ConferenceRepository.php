@@ -30,6 +30,33 @@ class ConferenceRepository extends ServiceEntityRepository
     //            ->getResult()
     //        ;
     //    }
+       /**
+        * @return Conference[] Returns an array of Conference objects
+        */
+       public function findByExampleField($value): array
+       {
+           return $this->createQueryBuilder('c')
+               ->andWhere('c.exampleField = :val')
+               ->setParameter('val', $value)
+               ->orderBy('c.id', 'ASC')
+               ->setMaxResults(10)
+               ->getQuery()
+               ->getResult()
+           ;
+       }
+       /**
+        * @return Conference[] Returns an array of Conference objects
+        */
+       public function findByCategorie($nom): array
+       {
+           return $this->createQueryBuilder('c')
+           ->innerJoin('c.categorie', 'cat')
+               ->Where('cat.nom= :val')
+               ->setParameter('val', $nom)
+               ->getQuery()
+               ->getResult()
+           ;
+       }
 
     //    public function findOneBySomeField($value): ?Conference
     //    {
