@@ -23,6 +23,7 @@
         {% block menu %}
         {{ render(controller(
         'App\\Controller\\ConferenceController::menu')) }}
+        <h5><a href="{{path('app_reservation')}}" > liste reservations</a> </h5>
         {% endblock %}
 
         {% block javascripts %}

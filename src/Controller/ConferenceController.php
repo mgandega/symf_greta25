@@ -16,6 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+
+
 
 class ConferenceController extends AbstractController
 {
@@ -25,7 +28,7 @@ class ConferenceController extends AbstractController
     }
 
     #[Route('/conference/add', name: 'app_conference.add')]
-    public function add(Request $request, ConferenceRepository $repo): Response
+    public function add(Request $request, ConferenceRepository $repo ): Response
     {
         $errors = '';
         $conference = new Conference();
@@ -65,6 +68,7 @@ class ConferenceController extends AbstractController
             // redirection vers la page des conferences
             return $this->redirectToRoute('app_conference.conferences');
         }
+
         return $this->render('conference/add.html.twig', [
             'form' => $form->createView()
         ]);
@@ -182,6 +186,18 @@ class ConferenceController extends AbstractController
         $categories = $this->em->getRepository(Categorie::class)->findAll();
         return $this->render("partials/menu.html.twig", ['categories'=>$categories]);
     }
+    #[Route('/listReservation', name: 'app_reservation')]
+    public function listReservation(){
+        $reservations = $this->em->getRepository(Reservation::class)->findAll();
+        return $this->render("conference/reservation.html.twig", ['reservations'=>$reservations]);
+    }
+    #[Route('/delete/{id}', name: 'app_reservation.delete')]
+    public function delete(Reservation $reservation){
+        $this->em->remove($reservation);
+        $this->em->flush();
+        return $this->redirectToRoute("app_reservation");
+    }
+
 
 }
     

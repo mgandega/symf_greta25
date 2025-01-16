@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: ConferenceRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -255,11 +256,30 @@ class Conference
     {
         
         $this->nbReservation = $nbReservation;
-        
+
         return $this;
     }
-    public function increaseReservation(){
+    public function deReservation(){
        
-        $this->nbReservation++ ;
+        $this->nbReservation-- ;
     }
+
+    #[Assert\Callback]
+    public static function validate(mixed $value, ExecutionContextInterface $context, mixed $payload): void
+{
+    // somehow you have an array of "fake names"
+    $fakeNames = ['fou','abandon'];
+
+    $contenu = explode(' ', $value->getDescription());
+   foreach($contenu as $val){
+       // check if the name is actually a fake name
+       if (in_array($val, $fakeNames)) {
+           $context->buildViolation('This name sounds totally fake!')
+               ->atPath('description')
+               ->addViolation()
+           ;
+           break;
+       }
+   }
+}
 }
