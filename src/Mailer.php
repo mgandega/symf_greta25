@@ -2,17 +2,19 @@
 // src/Controller/MailerController.php
 namespace App;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
+use Twig\Environment;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class Mailer extends AbstractController
 {
-    public function __construct(public MailerInterface $mailer){}
+    public function __construct(public MailerInterface $mailer, public Environment $twig){}
     public function sendEmail()
     {
+       $contenu =  $this->twig->render('messages\message.html.twig');
         $email = (new Email())
             ->from('monEmail@gmail.com')
             ->to('admin@admin.com')
@@ -21,8 +23,8 @@ class Mailer extends AbstractController
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
             ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
+            ->html($contenu);
+            ;
 
         $this->mailer->send($email);
 
