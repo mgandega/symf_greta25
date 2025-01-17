@@ -13,6 +13,7 @@
     <li><a href="{{path('app_conference.categorie', {'nom': categorie.nom }) }}">{{ categorie.nom }}</a></li>
     {% endfor %}
     </ul>
+    <a href="{{path('contact.sendMessage')}}">contact</a>
     </div>
 {% for conference in conferences %}
     <div class="col-sm-3">

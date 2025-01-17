@@ -201,15 +201,16 @@ class ConferenceController extends AbstractController
     #[Route('/filtre/recherche', name: 'filtre.recherche')]
     public function recherche(Request $request){
     //  dd($_POST['prix'], $_POST['date'],$_POST['categorie']);
-    $prix = $request->request->get('prix');
-    $date = $request->request->get('date');
-    $categorie = $request->request->get('categorie');
-    $conferences = $this->em->getRepository(Conference::class)->filtreConferences($prix,$date,$categorie);
+    $selectedPrix = $request->request->get('prix');
+    $selectedDate = $request->request->get('date');
+    $selectedCategorie = $request->request->get('categorie');
+    $conferences = $this->em->getRepository(Conference::class)->filtreConferences( $selectedPrix,$selectedDate,$selectedCategorie);
     $categories = $this->em->getRepository(Categorie::class)->findAll();
-    return $this->render('conference/index.html.twig', [
-        'conferences' => $conferences,
-        'categories'=>$categories
-    ]);
+    // return $this->render('conference/index.html.twig', [
+    //     'conferences' => $conferences,
+    //     'categories'=>$categories
+    // ]);
+    return $this->render('conference/index.html.twig',compact('conferences','categories','selectedDate', 'selectedPrix','selectedCategorie'));
     }
 
 }
