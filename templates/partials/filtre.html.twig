@@ -1,0 +1,17 @@
+{% set prices = [100, 200,300,400,500] %}
+<form action="{{ path('filtre.recherche')}}" method="post">
+<input type="date" name="date" /><br><br>
+<select name="categorie" >
+    <option value=""> selectionner une catégorie</option>
+{% for categorie in categories %}
+    <option value="{{categorie.nom }}"> {{categorie.nom }}</option>
+{% endfor %}
+</select><br><br>
+<select name="prix">
+    <option value="">selectionner un prix</option>
+{% for prix in prices %}
+    <option value="{{prix}}"> < {{prix}}</option>
+{% endfor %}
+</select><br><br>
+<input type="submit" value="rechercher" />
+</form>

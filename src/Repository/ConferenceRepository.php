@@ -57,6 +57,28 @@ class ConferenceRepository extends ServiceEntityRepository
                ->getResult()
            ;
        }
+       /** 
+        * @return Conference[] Returns an array of Conference objects
+        */
+       public function filtreConferences($prix,$date,$categorie)
+       {
+           $qb = $this->createQueryBuilder('c')
+           ->innerJoin('c.categorie', 'cat');
+            if(!empty($categorie)){
+                $qb->andWhere('cat.nom= :val')
+                ->setParameter('val', $categorie);
+            }
+            if((!empty($prix))){
+                $qb->andWhere('c.prix <= :prix')
+                ->setParameter('prix', $prix);
+            }
+            if(!empty($date)){
+                $qb->andWhere('c.date <= :date')
+                ->setParameter('date', $date);
+            }
+
+            return   $qb->getQuery()->getResult();
+       }
 
     //    public function findOneBySomeField($value): ?Conference
     //    {

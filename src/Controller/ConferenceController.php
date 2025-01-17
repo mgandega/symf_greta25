@@ -73,6 +73,7 @@ class ConferenceController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+    #[Route('/', name: 'app_conference.home')]
     #[Route('/conferences', name: 'app_conference.conferences')]
     public function conferences(Request $request, ConferenceRepository $repo): Response
     {
@@ -197,7 +198,19 @@ class ConferenceController extends AbstractController
         $this->em->flush();
         return $this->redirectToRoute("app_reservation");
     }
-
+    #[Route('/filtre/recherche', name: 'filtre.recherche')]
+    public function recherche(Request $request){
+    //  dd($_POST['prix'], $_POST['date'],$_POST['categorie']);
+    $prix = $request->request->get('prix');
+    $date = $request->request->get('date');
+    $categorie = $request->request->get('categorie');
+    $conferences = $this->em->getRepository(Conference::class)->filtreConferences($prix,$date,$categorie);
+    $categories = $this->em->getRepository(Categorie::class)->findAll();
+    return $this->render('conference/index.html.twig', [
+        'conferences' => $conferences,
+        'categories'=>$categories
+    ]);
+    }
 
 }
     

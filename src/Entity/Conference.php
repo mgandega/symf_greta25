@@ -280,6 +280,17 @@ class Conference
            ;
            break;
        }
+    }
+    $contenu = explode(',', $value->getDescription());
+   foreach($contenu as $val){
+       // check if the name is actually a fake name
+       if (in_array($val, $fakeNames)) {
+           $context->buildViolation('This name sounds totally fake!')
+               ->atPath('description')
+               ->addViolation()
+           ;
+           break;
+       }
    }
 }
 }
