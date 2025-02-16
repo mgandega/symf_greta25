@@ -259,7 +259,11 @@ class Conference
 
         return $this;
     }
-    public function deReservation(){
+       public function increaseReservation(){
+       
+        $this->nbReservation-- ;
+    }
+    public function decreaseReservation(){
        
         $this->nbReservation-- ;
     }

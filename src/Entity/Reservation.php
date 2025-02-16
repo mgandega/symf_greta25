@@ -76,6 +76,6 @@ class Reservation
     }
     #[ORM\PreRemove]
     public function decrease(){
-        $this->conference->deReservation();
+        $this->conference->decreaseReservation();
     }
 }
