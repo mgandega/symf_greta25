@@ -1,21 +1,22 @@
 <?php
-
 namespace App\Controller;
 
-use App\Entity\Conference;
+use App\Events\MyEvents;
 use App\Entity\Categorie;
+use App\Entity\Conference;
 use App\Entity\Commentaire;
 use App\Entity\Reservation;
-use App\Form\CommentaireType;
 use App\Form\ConferenceType;
+use App\Form\CommentaireType;
 use App\Form\ReservationType;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 
@@ -151,11 +152,13 @@ class ConferenceController extends AbstractController
         ]);
     }
     #[Route('/conferences/supprimer/{id}', name: 'app_conference.supprimer')]
-    public function supprimer($id, Request $request, ConferenceRepository $repo): Response
+    public function supprimer($id, Request $request, ConferenceRepository $repo, EventDispatcherInterface $dispatcher): Response
     {
         $conference = $repo->find($id);
         $this->em->remove($conference);
+        $dispatcher->dispatch(new MyEvents("jean","macron"), MyEvents::class); // App\Events\MyEvents
         $this->em->flush();
+
         return $this->redirectToRoute('app_conference.conferences');
     }
     #[Route('/conference/commentaire/{id}', name: 'app_conference.commenter')]

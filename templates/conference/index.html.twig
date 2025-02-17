@@ -19,7 +19,7 @@
     <div class="col-sm-3">
   
     <img src="{{ conference.image.url }}" width="200" />
-    <h5>{{ conference.titre}}</h5>
+    <h5>{{ conference.titre|char}}</h5>
     <p>{{ conference.description}}</p>
     <p><b>lieu: </b> {{ conference.lieu}}</p>
     <p><b>prix: </b> {{ conference.prix}}</p>

@@ -42,7 +42,7 @@ class AppFixtures extends Fixture
         $conferences = [];
         for($i=1; $i<=10; $i++){
         $conference = new Conference();
-        $conference->setTitre($faker->word);
+        $conference->setTitre($faker->sentence(3));
         $conference->setDescription($faker->sentence);
         $conference->setLieu($faker->streetAddress());
         $conference->setPrix($faker->numberBetween(100, 300));
