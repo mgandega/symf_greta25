@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
-use App\Mailer;
+use App\MonMailer;
 use App\Form\ContactType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 final class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'contact.sendMessage')]
-    public function sendMessage(Mailer $mailer, Request $request , EntityManagerInterface $manager): Response
+    public function sendMessage(MonMailer $mailer, Request $request , EntityManagerInterface $manager): Response
     {
         $contact = new Contact;
         $form = $this->createForm(ContactType::class, $contact);
@@ -23,7 +23,7 @@ final class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) { 
             $manager->persist($contact);
             $manager->flush();
-            $mailer->sendEmail();
+            $mailer->sendEmail($contact->getPseudo(), $contact->getMessage());
            return $this->redirectToRoute('app_conference.conferences');
         }
         return $this->render('contact/index.html.twig', [

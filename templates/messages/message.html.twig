@@ -1,9 +1,11 @@
+{% extends 'base.html.twig'%}
 
-<h5>Bienvenue sur notre site</h5>
-<p>hello tout le monde </p>
-<p>hello tout le monde </p>
-<p>hello tout le monde </p>
-<p>hello tout le monde </p>
-<p>hello tout le monde </p>
-<p>hello tout le monde </p>
-<p>hello tout le monde </p>
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+{% block body %}
+<div class="bordure" style="background-color: green; border:1px solid black;">
+<h5>Bienvenue sur le site de {{ pseudo }}</h5>
+<p>{{ message }} </p>
+</div>
+{% endblock %}

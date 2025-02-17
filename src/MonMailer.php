@@ -9,12 +9,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class Mailer extends AbstractController
+class MonMailer
 {
-    public function __construct(public MailerInterface $mailer, public Environment $twig){}
-    public function sendEmail()
+    public $mailer;
+    public $twig ;
+    public function __construct(MailerInterface $mailer,Environment $twig){
+        $this->mailer = $mailer;
+        $this->twig = $twig;
+    }
+
+    public function sendEmail($pseudo, $message)
     {
-       $contenu =  $this->twig->render('messages\message.html.twig');
+       $contenu =  $this->twig->render('messages\message.html.twig', compact('pseudo','message'));
         $email = (new Email())
             ->from('monEmail@gmail.com')
             ->to('admin@admin.com')
@@ -24,7 +30,7 @@ class Mailer extends AbstractController
             //->priority(Email::PRIORITY_HIGH)
             ->subject('Time for Symfony Mailer!')
             ->html($contenu);
-            ;
+            
 
         $this->mailer->send($email);
 
