@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -127,9 +128,10 @@ class ConferenceController extends AbstractController
     }
   
     #[Route('/conferences/edit/{id}', name: 'app_conference.edit')]
-    public function edit($id, Request $request, ConferenceRepository $repo): Response
+    #[IsGranted('POST_EDIT', 'conference')]
+    public function edit($id, Request $request, ConferenceRepository $repo, Conference $conference): Response
     {
-        $conference = $repo->find($id);
+        // $conference = $repo->find($id);
         // $this->em->getRepository(conference::class)->find($id);
         // 
         $form = $this->createForm(ConferenceType::class, $conference);
