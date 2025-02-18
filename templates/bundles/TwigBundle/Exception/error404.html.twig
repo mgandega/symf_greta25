@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Page non trouvée</h1>
+
+    <p>
+        la page de la requête n'est pas localisé. vous pouvez changer un autre url oubien <br>
+            
+        code : {{ status_code }} <br>
+        message : {{ status_text }} <br>
+        <a href="{{ path('app_conference.home') }}">retourner à la page d'accueil</a>.
+    </p>
+{% endblock %}

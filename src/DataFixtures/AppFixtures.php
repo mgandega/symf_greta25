@@ -49,6 +49,7 @@ class AppFixtures extends Fixture
         $conference->setDate($faker->datetime('Y-m-d'));
         $conference->setImage($this->getReference('image'.$i, Image::class));
         $conference->addCategorie($faker->randomElement($cat));
+        $conference->setUser();
         $manager->persist($conference);
         $conferences[] = $conference; 
        }

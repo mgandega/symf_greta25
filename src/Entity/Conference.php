@@ -71,6 +71,10 @@ class Conference
     #[ORM\Column]
     private ?int $nbReservation = 0;
 
+    #[ORM\ManyToOne(inversedBy: 'conferences')]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
+
 
     public function __construct()
     {
@@ -297,4 +301,16 @@ class Conference
        }
    }
 }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }
