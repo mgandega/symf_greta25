@@ -71,7 +71,7 @@ class Conference
     #[ORM\Column]
     private ?int $nbReservation = 0;
 
-    #[ORM\ManyToOne(inversedBy: 'conferences')]
+    #[ORM\ManyToOne(inversedBy: 'conferences',cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 

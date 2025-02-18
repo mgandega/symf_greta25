@@ -62,7 +62,7 @@ class ConferenceController extends AbstractController
 
             // la methode move permet de mettre l'image dans le repertoire image
             $file->move($chemin, $nom_image);
-
+            $conference->setUser($this->getUser());
             $this->em->persist($conference);
            // le PostPersist() se limite ici donc l'objet ne sera pas persisté dans la base de données 
             $this->em->flush();
@@ -156,7 +156,7 @@ class ConferenceController extends AbstractController
     {
         $conference = $repo->find($id);
         $this->em->remove($conference);
-        $dispatcher->dispatch(new MyEvents("jean","macron"), MyEvents::class); // App\Events\MyEvents
+        // $dispatcher->dispatch(new MyEvents("jean","macron"), MyEvents::class); // App\Events\MyEvents
         $this->em->flush();
 
         return $this->redirectToRoute('app_conference.conferences');

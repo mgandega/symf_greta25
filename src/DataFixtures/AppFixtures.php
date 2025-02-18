@@ -2,17 +2,21 @@
 
 namespace App\DataFixtures;
 
-use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
+use App\Entity\User;
+use App\Entity\Image;
+use App\Entity\Categorie;
 use App\Entity\Conference;
 use App\Entity\Commentaire;
 use App\Entity\Reservation;
-use App\Entity\Categorie;
-use App\Entity\Image;
-use Faker\Factory;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\FixtureInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
-{
+{  
+    public function __construct(public UserPasswordHasherInterface $passwordHasher){}
     public function load(ObjectManager $manager): void
     {
         // categorie
@@ -25,13 +29,24 @@ class AppFixtures extends Fixture
        $categories = ["conferences sur symfony","conference sur drupal","conference 
         sur laravel"];
         $cat = []; // [$categorie1, $categories2, categories3]
+        $users = [];
         for ($i=0; $i <3 ; $i++) { 
            $categorie = new Categorie;
            $categorie->setNom($categories[$i]);
            $manager->persist($categorie);
            $cat[] = $categorie;
         }
-
+        for($i=0; $i<=9; $i++){
+            $user = new User();
+            $user->setEmail($faker->email());
+            $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,'blabla');
+            $user->setPassword($hashedPassword);
+            $user->setFirstName($faker->firstName());
+            $user->setLastName($faker->lastName());
+            $manager->persist($user);
+            $users[] = $user;
+        }
        for($i=1; $i<=10; $i++){
            $image = new Image();
            $image->setUrl('https://www.laradiodesentreprises.com/wp-content/uploads/2022/04/_x_organisation-d-evenement.jpeg');
@@ -49,7 +64,7 @@ class AppFixtures extends Fixture
         $conference->setDate($faker->datetime('Y-m-d'));
         $conference->setImage($this->getReference('image'.$i, Image::class));
         $conference->addCategorie($faker->randomElement($cat));
-        $conference->setUser();
+        $conference->setUser($faker->randomElement($users));
         $manager->persist($conference);
         $conferences[] = $conference; 
        }
@@ -72,4 +87,4 @@ class AppFixtures extends Fixture
        }
         $manager->flush();
     }
-    }
+}
