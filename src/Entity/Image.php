@@ -35,8 +35,8 @@ class Image
 
     #[Assert\File(
         maxSize: '1024k',
-        extensions: ['pdf'],
-        extensionsMessage: 'Please upload a valid PDF',
+        extensions: ['jpg', 'jpeg', 'png', 'pdf'],
+        extensionsMessage: 'Please upload a valid file',
     )]
     private UploadedFile $file ;
 

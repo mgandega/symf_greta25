@@ -59,19 +59,19 @@ class Conference
     /**
      * @var Collection<int, Reservation>
      */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'conference')]
-    private Collection $reservations;
+    // #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'conference')]
+    // private Collection $reservations;
 
     /**
      * @var Collection<int, Commentaire>
      */
-    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'conference')]
+    #[ORM\OneToMany(targetEntity: Commentaire::class, mappedBy: 'conference', cascade: ['persist', 'remove'])]
     private Collection $commentaires;
 
     #[ORM\Column]
     private ?int $nbReservation = 0;
 
-    #[ORM\ManyToOne(inversedBy: 'conferences',cascade: ['persist'])]
+    #[ORM\ManyToOne(inversedBy: 'conferences',cascade: ['persist','remove'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
@@ -310,6 +310,13 @@ class Conference
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function setReservations(?Collection $reservations): static
+    {
+        $this->reservations = $reservations;
 
         return $this;
     }

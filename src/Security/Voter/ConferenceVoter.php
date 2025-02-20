@@ -10,13 +10,28 @@ final class ConferenceVoter extends Voter
 {
     public const EDIT = 'POST_EDIT';
     public const VIEW = 'POST_VIEW';
+    public const DELETE = 'POST_DELETE';
+    public const CREATE = 'POST_CREATE';
 
+/*************  ✨ Codeium Command ⭐  *************/
+    /**
+     * Whether this voter supports the given attribute.
+     * @param string $attribute An attribute to check, such as 'EDIT' or 'VIEW'
+     * @param mixed $subject The object to access, which is a Conference in this case
+     * @return bool true if this Voter can process the attribute on the subject, false otherwise
+     */
+/******  48f0a3e0-ed33-4125-9749-eb1985033ac6  *******/
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // replace with your own logic
-        // https://symfony.com/doc/current/security/voters.html
-        return in_array($attribute, [self::EDIT, self::VIEW])
+        // dd($attribute, $subject);
+        if($attribute === self::CREATE) {
+           return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE]);
+        }elseif($attribute === self::EDIT||$attribute === self::VIEW||$attribute === self::DELETE) {
+            // dd(in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE]));
+            return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE])
             && $subject instanceof \App\Entity\Conference;
+        }
+        return false;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -30,12 +45,26 @@ final class ConferenceVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            case self::CREATE:
+
+                if($user){
+                    return true;
+                }
+                break;
             case self::EDIT:
-                if($subject->getUser()->getId() === $user->getId()) {
+                // $subject est une instance de Conference ($subject => $conference)
+                // dd($subject->getUser()->getId() === $user->getId() || in_array('ROLE_ADMIN', $user->getRoles()));
+                if($subject->getUser()->getId() === $user->getId() || in_array('ROLE_ADMIN', $user->getRoles())) {
                         return true; // signifie que c'est autorisé
                 }
                 // logic to determine if the user can EDIT
                 // return true or false
+                break;
+            case self::DELETE:
+                // logic to determine if the user can VIEW
+                if($subject->getUser()->getId() === $user->getId() || in_array('ROLE_ADMIN', $user->getRoles())) {
+                    return true;
+                }
                 break;
 
             case self::VIEW:
