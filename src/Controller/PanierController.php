@@ -78,9 +78,12 @@ final class PanierController extends AbstractController
     //         'prix'=>[12,40,30]
     //      ];
         // vérifions si le produit existe déja dans le panier
-          $cle = array_search($conferenceId, $panier['conferenceId']);
+        if(!empty($panier['conferenceId'])){
+         $cle = array_search($conferenceId, $panier['conferenceId']);
+        }
+          
 
-          if($cle !==false){
+          if(isset($cle) and $cle !==false){
     //     [
     //         'conferenceId'=>[1,2,3],
     //         'quantite' =>[2,3,1], // $panier['quantite'][1] => 3 (3 + 5 = 8) 
@@ -151,11 +154,24 @@ final class PanierController extends AbstractController
              $session = $this->requestStack->getSession();
              $panier = $this->getPanier();
              $prixTotal =$this->prixTotal();
-
             return $this->render('panier/index.html.twig', [
             'panier' => $panier,
             'prixTotal' => $prixTotal
         ]);
 
+}
+  #[Route('/panier_vider', name: 'app_panier_vider')]
+        public function panier_vider(){
+             $session = $this->requestStack->getSession();
+             $panier = $this->getPanier();
+             $prixTotal =$this->prixTotal();
+             $panier = [];
+             $prixTotal = 0;
+
+             $session->set('panier',$panier);
+            return $this->render('panier/index.html.twig', [
+            'panier' => $panier,
+            'prixTotal' => $prixTotal
+        ]);
 }
 }
