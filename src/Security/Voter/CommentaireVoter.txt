@@ -14,10 +14,10 @@ final class CommentaireVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if($subject->getUser()){
+        // if($subject->getUser()){
             return true;
-        }
-        return false;
+        // }
+        // return false;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
