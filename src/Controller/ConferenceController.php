@@ -129,7 +129,7 @@ class ConferenceController extends AbstractController
     }
   
     #[Route('/conferences/edit/{id}', name: 'app_conference.edit')]
-    // #[IsGranted('POST_EDIT', 'conference')]
+    #[IsGranted('POST_EDIT', 'conference')]
     public function edit($id, Request $request, ConferenceRepository $repo, Conference $conference): Response
     {
         // $conference = $repo->find($id);
@@ -158,13 +158,13 @@ class ConferenceController extends AbstractController
     // #[IsGranted('POST_DELETE', 'conference')]
     public function supprimer($id, Request $request, ConferenceRepository $repo, EventDispatcherInterface $dispatcher, Conference $conference): Response
     {
-        $conference = $repo->find($id);
-        // $reservation = $conference->getReservations()[0];
-        // $conference->removeReservation($reservation); // Reservation
-        $this->em->remove($conference);
-        // $dispatcher->dispatch(new MyEvents("jean","macron"), MyEvents::class); // App\Events\MyEvents
-        $this->em->flush();
 
+    $conference = $repo->find($id);
+    foreach ($conference->getReservations() as $reservation) {
+        $this->em->remove($reservation);
+    }
+    $this->em->remove($conference);
+    $this->em->flush();
         return $this->redirectToRoute('app_conference.conferences');
     }
     #[Route('/conference/commentaire/{id}', name: 'app_conference.commenter')]

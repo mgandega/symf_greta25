@@ -14,16 +14,16 @@
     <div class="col-sm-3">
     <h5>{{ conference.titre}}</h5>
     <p>{{ conference.description}}</p>
-    <p><b>lieu:</b> {{ conference.lieu}}</p>
-    <p><b>prix:</b> {{ conference.prix}}</p>
+    <p><b>lieu:</b> {{ conference.lieu }}</p>
+    <p><b>prix:</b> {{ conference.prix }}</p>
     <p>{{ conference.date|date("d m Y h:i:s")}}</p>
 
-    {% if is_granted('POST_EDIT', conference) %}
+    {# {% if is_granted('POST_EDIT', conference) %}
     <a href="{{ path('app_conference.edit', {'id':conference.id})}}">modifier</a>
-    {% endif %}
-    {% if is_granted('POST_DELETE', conference) %}
+    {% endif %} #}
+    {# {% if is_granted('POST_DELETE', conference) %} #}
     <a href="{{ path('app_conference.supprimer', {'id':conference.id})}}">supprimer</a>
-    {% endif %}
+    {# {% endif %} #}
     {# <a href="{{ path('app_conference.reservation', {'id':conference.id})}}">reserver</a> #}
     {# ceci permet d'envoyer idConference=2 par exemple sur l'url #}
     {# <a href="?idConference={{conference.id}}">commenter</a> #}
@@ -31,7 +31,7 @@
     {% if is_granted('POST_COMMENT', conference) %}
      <a href="{{ path('app_conference.commenter', {'id':conference.id})}}">commenter</a>
     {% endif %}
-<form method="post" action="{{ path('app_panier', {'id':conference.id})}}">
+<form method="POST" action="{{ path('app_panier')}}">
     <input type="hidden" name="idConference" value="{{conference.id}}">
     <select name="quantite">
         {% for i in range(1, 10) %}

@@ -23,10 +23,10 @@ final class ConferenceVoter extends Voter
 /******  48f0a3e0-ed33-4125-9749-eb1985033ac6  *******/
     protected function supports(string $attribute, mixed $subject): bool
     {
-        // dd($attribute, $subject);
         if($attribute === self::CREATE) {
            return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE]);
-        }elseif($attribute === self::EDIT||$attribute === self::VIEW||$attribute === self::DELETE) {
+        }elseif($attribute === self::EDIT || $attribute === self::VIEW || $attribute === self::DELETE) {
+            
             // dd(in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE]));
             return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE])
             && $subject instanceof \App\Entity\Conference;
@@ -46,11 +46,11 @@ final class ConferenceVoter extends Voter
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::CREATE:
-
                 if($user){
                     return true;
                 }
                 break;
+
             case self::EDIT:
                 // $subject est une instance de Conference ($subject => $conference)
                 // dd($subject->getUser()->getId() === $user->getId() || in_array('ROLE_ADMIN', $user->getRoles()));
@@ -60,6 +60,7 @@ final class ConferenceVoter extends Voter
                 // logic to determine if the user can EDIT
                 // return true or false
                 break;
+
             case self::DELETE:
                 // logic to determine if the user can VIEW
                 if($subject->getUser()->getId() === $user->getId() || in_array('ROLE_ADMIN', $user->getRoles())) {

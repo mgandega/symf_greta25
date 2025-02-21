@@ -3,18 +3,24 @@
 {% block title %}Hello PanierController!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/var/www/html/symf_greta25/src/Controller/PanierController.php</code></li>
-        <li>Your template at <code>/var/www/html/symf_greta25/templates/panier/index.html.twig</code></li>
-    </ul>
+{# <div class="container"> #}
+    {{ parent() }}
+<div class="row">
+<div class="col-sm-3">
 </div>
+<div class="col-sm-9">
+<table class="table">
+    {{ dump(panier) }}
+    <tr><th>Titre</th><th>Quantité</th><th>description</th><th>Prix</th><th>Prix Total</th></tr>
+    {% for cle, value in panier.conferenceId %}
+        <tr><td>{{ panier.titre[cle] }}</td><td>{{ panier.quantite[cle] }}</td><td>{{ panier.description[cle] }}</td><td>{{panier.prix[cle]}}</td><td>{{ panier.prix[cle]*panier.quantite[cle] }}</td></tr>
+    {% endfor %}
+
+</table>
+</div>
+</div>
+{# </div> #}
+
 {% endblock %}
+

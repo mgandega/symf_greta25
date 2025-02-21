@@ -22,9 +22,9 @@ class Reservation
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    // #[ORM\ManyToOne(inversedBy: 'reservation')]
-    // #[ORM\JoinColumn(nullable: false)]
-    // private ?Conference $conference = null;
+    #[ORM\ManyToOne(inversedBy: 'reservations',  cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Conference $conference = null;
 
     public function __construct(){
         $this->date = new DateTimeImmutable();

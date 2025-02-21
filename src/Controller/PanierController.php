@@ -18,23 +18,28 @@ final class PanierController extends AbstractController
         private RequestStack $requestStack
     ) {}
 
-    #[Route('/panier/{id}', name: 'app_panier')]
-    public function index($id, Request $request, ConferenceRepository $repo): Response
+    #[Route('/panier', name: 'app_panier')]
+    public function index(ConferenceRepository $repo , Request $request): Response
     {
-        $this->request = $request;
-      $idConference = $request->request->get('idConference');
-      $quantite = $request->request->get('quantite');
+      $idConference = $request->request->get('idConference'); // $_POST['idConference']
+    //   dd($idConference);
+    //   $idConference = $request->query->get('idConference');  // $_GET['id_conference']
+      $quantite = $request->request->get('quantite'); // $_POST['quantite']
      $conference = $repo->find($idConference);
      $description = $conference->getDescription();
      $titre = $conference->getTitre();
      $prix = $conference->getPrix();
       if($idConference && $quantite){
-        $this->traitementPanier($idConference, $quantite, $titre, $description,$prix );
+        $this->traitementPanier($idConference, $quantite, $titre, $description,$prix);
       }
-
+      // récupération du panier
+      $panier = $this->getPanier();
+      // calcul des prix
+      $prixTotal =$this->prixTotal();
     //  dd($request->request->);
         return $this->render('panier/index.html.twig', [
-            'controller_name' => 'PanierController',
+            'panier' => $panier,
+            'prixTotal' => $prixTotal
         ]);
     }
 
@@ -58,28 +63,56 @@ final class PanierController extends AbstractController
 
     // Ajouter un produit au panier
     public function traitementPanier($conferenceId, $quantite, $titre, $description, $prix ){
-        // initialisation du panier
+
+        // $personnes = ['pierre','paul','jacques'];
+        // array_search('martin',$personnes); // si oui, elle retourne la clé correspondante , si non elle retourne false
+        // initialisation du panier si le panier n'existe pas
+        // si le panier existe déja elle me retourne le panier (avec ses données)
         $this->createPanier();
         
         $panier = $this->requestStack->getSession()->get('panier');
-        // vérifions si le produit existe déja dans le panier
-          $position = array_search($conferenceId, $panier['conferenceId']);
 
-          if($position !==false){
+    //     [
+    //         'conferenceId'=>[1,2,3],
+    //         'quantite' =>[2,3,1],
+    //         'prix'=>[12,40,30]
+    //      ];
+        // vérifions si le produit existe déja dans le panier
+          $cle = array_search($conferenceId, $panier['conferenceId']);
+
+          if($cle !==false){
+    //     [
+    //         'conferenceId'=>[1,2,3],
+    //         'quantite' =>[2,3,1], // $panier['quantite'][1] => 3 (3 + 5 = 8) 
+    //         'prix'=>[12,40,30]
+    //         'decsription' =>['desc1', 'desc2','desc3']
+    //      ];
                // si le produit existe déja dans le panier
-               $panier['quantite'][$position] += $quantite;         
+               $panier['quantite'][$cle] += $quantite;         
           }else{    
             // si le produit n'existe pas encore dans le panier
-           
+                  [
+                     'conferenceId'=>[],
+                     'quantite' =>[],
+                     'prix'=>[]
+                 ];
                    $panier['conferenceId'][] = $conferenceId;
                    $panier['quantite'][] = $quantite;
                    $panier['titre'][] = $titre;
                    $panier['prix'][] = $prix;
                    $panier['description'][] = $description;
           }
-          // on met à jour le panier
-          
-          $this->requestStack->getSession()->set('panier', $panier);
+          // on met à jour le panier 
+        $this->requestStack->getSession()->set('panier', $panier); // $panier = ['gh','eefe']
     
+      }
+      public function getPanier(){
+        $session = $this->requestStack->getSession();
+        $panier = $session->get('panier');
+        return $panier;
+      }
+
+      public function prixTotal(){
+        
       }
 }
