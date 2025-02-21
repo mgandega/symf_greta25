@@ -18,12 +18,14 @@
     <p><b>prix:</b> {{ conference.prix }}</p>
     <p>{{ conference.date|date("d m Y h:i:s")}}</p>
 
-    {# {% if is_granted('POST_EDIT', conference) %}
+    {% if is_granted('POST_EDIT', conference) %}
     <a href="{{ path('app_conference.edit', {'id':conference.id})}}">modifier</a>
-    {% endif %} #}
-    {# {% if is_granted('POST_DELETE', conference) %} #}
-    <a href="{{ path('app_conference.supprimer', {'id':conference.id})}}">supprimer</a>
-    {# {% endif %} #}
+    {% endif %}
+
+    {% if is_granted('POST_DELETE', conference) %}
+        <a href="{{ path('app_conference.supprimer', {'id':conference.id})}}">supprimer</a>
+    {% endif %}
+
     {# <a href="{{ path('app_conference.reservation', {'id':conference.id})}}">reserver</a> #}
     {# ceci permet d'envoyer idConference=2 par exemple sur l'url #}
     {# <a href="?idConference={{conference.id}}">commenter</a> #}

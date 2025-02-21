@@ -8,10 +8,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class ConferenceVoter extends Voter
 {
+    public const DELETE = 'POST_DELETE';
     public const EDIT = 'POST_EDIT';
     public const VIEW = 'POST_VIEW';
-    public const DELETE = 'POST_DELETE';
     public const CREATE = 'POST_CREATE';
+    public const COMMENT = 'POST_COMMENT';
 
 /*************  ✨ Codeium Command ⭐  *************/
     /**
@@ -23,12 +24,13 @@ final class ConferenceVoter extends Voter
 /******  48f0a3e0-ed33-4125-9749-eb1985033ac6  *******/
     protected function supports(string $attribute, mixed $subject): bool
     {
+        
         if($attribute === self::CREATE) {
-           return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE]);
-        }elseif($attribute === self::EDIT || $attribute === self::VIEW || $attribute === self::DELETE) {
+           return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE, self::COMMENT]);
+        }elseif($attribute === self::EDIT || $attribute === self::VIEW || $attribute === self::DELETE || self::COMMENT ) {
             
             // dd(in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE]));
-            return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::CREATE])
+            return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::COMMENT])
             && $subject instanceof \App\Entity\Conference;
         }
         return false;
@@ -69,9 +71,17 @@ final class ConferenceVoter extends Voter
                 break;
 
             case self::VIEW:
+                return true;
                 // logic to determine if the user can VIEW
                 // return true or false
                 break;
+            case self::COMMENT:
+                if (!empty($user)) {
+                  return true;
+                }
+                  
+                break;
+            
         }
 
         return false;

@@ -9,6 +9,7 @@ use App\Entity\Reservation;
 use App\Form\ConferenceType;
 use App\Form\CommentaireType;
 use App\Form\ReservationType;
+use App\Security\Voter\ConferenceVoter;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,7 +100,7 @@ class ConferenceController extends AbstractController
         ]);
     }
     #[Route('/conferences/details/{id}', name: 'app_conference.details')]
-    public function details($id, Request $request, ConferenceRepository $repo): Response
+    public function details($id, Request $request, ConferenceRepository $repo, Conference $conference): Response
     {
         $conference = $repo->find($id);
         // $this->em->getRepository(Conference::class)->findAll();
@@ -110,7 +111,7 @@ class ConferenceController extends AbstractController
     #[Route('/conferences/reservation/{id}', name: 'app_conference.reservation')]
     public function reservation($id, Request $request, ConferenceRepository $repo): Response
     {
-
+      
        $reservation = new Reservation();
        $form = $this->createForm(ReservationType::class, $reservation);
         // $this->em->getRepository(Conference::class)->findAll();
@@ -155,10 +156,9 @@ class ConferenceController extends AbstractController
         ]);
     }
     #[Route('/conferences/supprimer/{id}', name: 'app_conference.supprimer')]
-    // #[IsGranted('POST_DELETE', 'conference')]
+    #[IsGranted('POST_DELETE', 'conference')]
     public function supprimer($id, Request $request, ConferenceRepository $repo, EventDispatcherInterface $dispatcher, Conference $conference): Response
     {
-
     $conference = $repo->find($id);
     foreach ($conference->getReservations() as $reservation) {
         $this->em->remove($reservation);
