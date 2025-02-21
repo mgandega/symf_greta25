@@ -12,11 +12,17 @@
 <div class="col-sm-9">
 <table class="table">
     {{ dump(panier) }}
-    <tr><th>Titre</th><th>Quantité</th><th>description</th><th>Prix</th><th>Prix Total</th></tr>
+    <tr><th>Titre</th><th>Quantité</th><th>description</th><th>Prix</th><th>Prix Total</th><th>Action</th</tr>
+    {% if not empty panier %}
     {% for cle, value in panier.conferenceId %}
-        <tr><td>{{ panier.titre[cle] }}</td><td>{{ panier.quantite[cle] }}</td><td>{{ panier.description[cle] }}</td><td>{{panier.prix[cle]}}</td><td>{{ panier.prix[cle]*panier.quantite[cle] }}</td></tr>
+        <tr><td>{{ panier.titre[cle] }}</td><td>{{ panier.quantite[cle] }}</td><td>{{ panier.description[cle] }}</td><td>{{panier.prix[cle]}}</td><td>{{ panier.prix[cle]*panier.quantite[cle] }}</td><td><a href="{{path('supprimer_produit',{'id':panier.conferenceId[cle]} )}}">suppimer</a></td></tr>
     {% endfor %}
-
+        <tr><th></th><th></th><th></th><th></th><th></th></tr>
+        <tr><th></th><th></th><th></th><th></th><th></th></tr>
+    <tr><th></th><th></th><th></th><th>Prix Total</th><th>{{ prixTotal }}</th></tr>
+        <tr><th></th><th></th><th></th><th></th><th></th></tr>
+        <tr><th></th><th></th><th></th><th></th><th></th></tr>
+    <tr><th></th><th></th><th></th><th><button><a href="{{path('app_panier_vider')}}">vider le panier </a></button></th><th></th></tr>
 </table>
 </div>
 </div>

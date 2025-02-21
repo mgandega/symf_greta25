@@ -113,6 +113,67 @@ final class PanierController extends AbstractController
       }
 
       public function prixTotal(){
-        
+        $panier = $this->getPanier(); // DRY (Don't Repeat Yourself)
+        $total = 0;
+        if(!empty($panier['quantite'])){
+            foreach($panier['quantite'] as $cle=>$valeur){
+            $total +=$panier['quantite'][$cle]*$panier['prix'][$cle];
+        }
+        }
+       
+        return $total;
       }
+
+
+  #[Route('/supprimer/{id}', name: 'supprimer_produit')]
+    public function supprimer($id)
+    {
+       $session = $this->requestStack->getSession();
+       $panier = $this->getPanier();
+      
+       // on verifie si cette clé existe dans le panier
+        $cle = array_search($id, $panier['conferenceId']);
+
+        // si cette clé existe supprime moi tous les élements qui ont cette clé
+        if($cle !==false){
+            array_splice($panier['conferenceId'], $cle, 1);
+            array_splice($panier['titre'], $cle, 1);
+            array_splice($panier['quantite'], $cle, 1);
+            array_splice($panier['prix'], $cle, 1);
+            array_splice($panier['description'], $cle, 1);
+            $session->set('panier',$panier);
+        }
+        return $this->redirectToRoute('app_panier_supprimer');
+    }
+
+        #[Route('/panier_supprimer', name: 'app_panier_supprimer')]
+        public function panier_suppimer(){
+             $session = $this->requestStack->getSession();
+             $panier = $this->getPanier();
+             $prixTotal =$this->prixTotal();
+
+            return $this->render('panier/index.html.twig', [
+            'panier' => $panier,
+            'prixTotal' => $prixTotal
+        ]);
+
+        }
+
+         #[Route('/panier_vider', name: 'app_panier_vider')]
+        public function panier_vider(){
+            
+             $session = $this->requestStack->getSession();
+             $panier = $this->getPanier();
+             $prixTotal =$this->prixTotal();
+             $prixTotal = 0;
+            unset($panier);
+            $panier = [];
+
+
+
+            return $this->render('panier/index.html.twig', [
+            'panier' => $panier,
+            'prixTotal' => $prixTotal
+            ]);
+       }
 }
