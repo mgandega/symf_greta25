@@ -157,23 +157,5 @@ final class PanierController extends AbstractController
             'prixTotal' => $prixTotal
         ]);
 
-        }
-
-         #[Route('/panier_vider', name: 'app_panier_vider')]
-        public function panier_vider(){
-            
-             $session = $this->requestStack->getSession();
-             $panier = $this->getPanier();
-             $prixTotal =$this->prixTotal();
-             $prixTotal = 0;
-            unset($panier);
-            $panier = [];
-
-
-
-            return $this->render('panier/index.html.twig', [
-            'panier' => $panier,
-            'prixTotal' => $prixTotal
-            ]);
-       }
+}
 }
