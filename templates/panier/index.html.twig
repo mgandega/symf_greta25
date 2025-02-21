@@ -13,7 +13,6 @@
 <table class="table">
     {{ dump(panier) }}
     <tr><th>Titre</th><th>Quantité</th><th>description</th><th>Prix</th><th>Prix Total</th><th>Action</th</tr>
-    {% if not empty panier %}
     {% for cle, value in panier.conferenceId %}
         <tr><td>{{ panier.titre[cle] }}</td><td>{{ panier.quantite[cle] }}</td><td>{{ panier.description[cle] }}</td><td>{{panier.prix[cle]}}</td><td>{{ panier.prix[cle]*panier.quantite[cle] }}</td><td><a href="{{path('supprimer_produit',{'id':panier.conferenceId[cle]} )}}">suppimer</a></td></tr>
     {% endfor %}
