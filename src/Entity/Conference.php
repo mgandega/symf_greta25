@@ -46,8 +46,9 @@ class Conference
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-     #[Assert\Valid]
-    #[ORM\OneToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
+
+    #[Assert\Valid]
+    #[ORM\ManyToOne(targetEntity: Image::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: true)]
     private ?Image $image = null;
 
@@ -149,16 +150,19 @@ class Conference
         return $this;
     }
 
-  public function getImage(): ?Image
-{
-    return $this->image;
-}
+    public function getImage(): Image
+    {
+        if ($this->image === null) {
+            $this->image = new Image(); // Création automatique si null
+        }
+        return $this->image;
+    }
 
-public function setImage(?Image $image): self
-{
-    $this->image = $image;
-    return $this;
-}
+    public function setImage(?Image $image): self
+    {
+        $this->image = $image;
+        return $this;
+    }
 
     /**
      * @return Collection<int, categorie>
