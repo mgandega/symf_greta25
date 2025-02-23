@@ -44,7 +44,6 @@ class ConferenceController extends AbstractController
 
         // si le formulaire est soummis et que le formulaire est valide
         if($form->isSubmitted() && $form->isValid()){
-
             // le chemin où on doit stocker l'image (nom de l'image)
             //$_SERVER['DOCUMENT_ROOT'] => /Applications/MAMP/htdocs/symf_greta25/public/;
             $chemin = $_SERVER['DOCUMENT_ROOT'].'uploads/images';
@@ -177,6 +176,7 @@ class ConferenceController extends AbstractController
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);
         if($form->isSubmitted()){
+           
             $commentaire->setConference($conference);
             $this->em->persist($commentaire);
             $this->em->flush();
