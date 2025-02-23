@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
@@ -29,12 +30,12 @@ class Image
     private ?string $url = null;
 
     // Ce champ n'est pas mappé en base de données
-    #[Assert\File(
-        maxSize: '1024k',
-        mimeTypes: ['application/pdf'],
-        mimeTypesMessage: 'Veuillez uploader un fichier PDF valide.'
-    )]
-    private ?File $file = null;
+    #[Assert\Image(
+    maxSize: '1024k',
+    mimeTypes: ['image/jpeg', 'image/jpg', 'image/png'],
+    mimeTypesMessage: 'Veuillez uploader une image valide.'
+)]
+    private ?UploadedFile $file = null;
 
     public function getId(): ?int
     {
@@ -63,16 +64,22 @@ class Image
         return $this;
     }
 
-    public function getFile(): ?File
+    public function getFile(): ?UploadedFile
     {
         return $this->file;
     }
+    
 
-    public function setFile(?File $file): static
-    {
-        $this->file = $file;
-        return $this;
+    // public function setFile(?UploadedFile $file): static
+    // {
+    //     $this->file = $file;
+    //     return $this;
+    // }
+    public function setFile(?UploadedFile $file): self 
+    { $this->file = $file; 
+        return $this; 
     }
+
 
 /*************  ✨ Codeium Command ⭐  *************/
     /**

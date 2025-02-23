@@ -170,14 +170,7 @@ class ConferenceController extends AbstractController
     #[Route('/conference/commentaire/{id}', name: 'app_conference.commenter')]
     public function commenter($id, Request $request, Conference $conference): Response
     {
-    //   $commentaire = new Commentaire();
-    //   $commentaire->setPseudo($request->request->get('pseudo')); 
-    //   $commentaire->setContenu($request->request->get('contenu')); 
-
-    // $commentaire->setConference($conference);
-
-    // $this->em->persist($commentaire);
-    // $this->em->flush();
+       
        $commentaires =  $this->em->getRepository(Commentaire::class)->findByConference($conference);
       
         $commentaire = new Commentaire();
@@ -205,6 +198,7 @@ class ConferenceController extends AbstractController
     public function delete(Reservation $reservation){
         $this->em->remove($reservation);
         $this->em->flush();
+        
         return $this->redirectToRoute("app_reservation");
     }
     #[Route('/filtre/recherche', name: 'filtre.recherche')]

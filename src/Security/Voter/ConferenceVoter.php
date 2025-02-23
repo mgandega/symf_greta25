@@ -47,6 +47,7 @@ final class ConferenceVoter extends Voter
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
+            
             case self::CREATE:
                 if($user){
                     return true;
@@ -56,7 +57,7 @@ final class ConferenceVoter extends Voter
             case self::EDIT:
                 // $subject est une instance de Conference ($subject => $conference)
                 // dd($subject->getUser()->getId() === $user->getId() || in_array('ROLE_ADMIN', $user->getRoles()));
-                if($subject->getUser()->getId() === $user->getId() || in_array('ROLE_ADMIN', $user->getRoles())) {
+                if($subject->getUser() === $user || in_array('ROLE_ADMIN', $user->getRoles())) {
                         return true; // signifie que c'est autorisé
                 }
                 // logic to determine if the user can EDIT
@@ -65,7 +66,7 @@ final class ConferenceVoter extends Voter
 
             case self::DELETE:
                 // logic to determine if the user can VIEW
-                if($subject->getUser()->getId() === $user->getId() || in_array('ROLE_ADMIN', $user->getRoles())) {
+                if($subject->getUser() === $user || in_array('ROLE_ADMIN', $user->getRoles())) {
                     return true;
                 }
                 break;
