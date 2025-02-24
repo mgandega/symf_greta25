@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Events\MyEvents;
 use App\Entity\Categorie;
 use App\Entity\Conference;
+use Pagerfanta\Pagerfanta;
 use App\Entity\Commentaire;
 use App\Entity\Reservation;
 use App\Form\ConferenceType;
@@ -12,6 +13,7 @@ use App\Form\ReservationType;
 use App\Security\Voter\ConferenceVoter;
 use App\Repository\ConferenceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -46,8 +48,7 @@ class ConferenceController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             // le chemin où on doit stocker l'image (nom de l'image)
             //$_SERVER['DOCUMENT_ROOT'] => /Applications/MAMP/htdocs/symf_greta25/public/;
-            $chemin = $_SERVER['DOCUMENT_ROOT'].'uploads/images';
-
+            $chemin = $this->getParameter('photo_directory');
             // récupération de l'objet file (pour pouvoir récupérer le nom de l'image par exemple)
             $file = $conference->getImage()->getFile();
 
@@ -80,12 +81,24 @@ class ConferenceController extends AbstractController
     #[Route('/conferences', name: 'app_conference.conferences')]
     public function conferences(Request $request, ConferenceRepository $repo): Response
     {
-        $conferences = $repo->findAll();
+        // $conferences = $repo->findAll();
         $categories = $this->em->getRepository(Categorie::class)->findAll();
+        //pagerFanta
+        $query = $repo->createBlogListQueryBuilder();
+
+        $pagerfanta = new Pagerfanta(
+            new QueryAdapter($query)
+        );
+        
+        $pagerfanta->setMaxPerPage(4); // 6 par page
+        $pagerfanta->setCurrentPage($request->query->getInt('page', 1));
+
+        // end pagerFanta
         // $this->em->getRepository(Conference::class)->findAll();
         return $this->render('conference/index.html.twig', [
-            'conferences' => $conferences,
-            'categories'=>$categories
+            'conferences' => $pagerfanta->getCurrentPageResults(),
+            'categories'=>$categories,
+            'pager' => $pagerfanta
         ]);
     }
     #[Route('/conference/categorie/{nom}', name: 'app_conference.categorie')]

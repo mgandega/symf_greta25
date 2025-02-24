@@ -1,0 +1,28 @@
+<?php
+
+namespace App\EventSubscriber;
+
+use App\Entity\Conference;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
+
+class EasyAdminSubscriber implements EventSubscriberInterface
+{
+    public function onBeforeEntityUpdatedEvent($event): void
+    {
+       
+       $conference = $event->getEntityInstance();
+    //    dd($conference);
+       if(!$conference instanceof Conference){
+        return;
+       }
+       $conference->setUpdatedAt(new \DateTimeImmutable('now'));
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            BeforeEntityUpdatedEvent::class => 'onBeforeEntityUpdatedEvent',
+        ];
+    }
+}

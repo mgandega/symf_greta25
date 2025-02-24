@@ -35,17 +35,48 @@ class ConferenceCrudController extends AbstractCrudController
             TextField::new('lieu'),
             MoneyField::new('prix')->setCurrency('EUR'),
             DateTimeField::new('date'),
+            DateTimeField::new('updatedAt'),
             AssociationField::new('categorie'),
+
             Field::new('image.file', 'Image')->setFormType(FileType::class)// <-- Ajoute ce champ
             ->setRequired(false)
             ->hideOnIndex(),
             ImageField::new('image.url', 'Mon fichier')
-                // ->setBasePath('uploads/images')  // Pour affichage
-                // ->setUploadDir('public/uploads/images') // Chemin de stockage
                 ->setUploadedFileNamePattern('[randomhash].[extension]') 
                 ->setRequired(false)->hideOnForm()->hideOnDetail()
         ];
     }
+
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+       if ($entityInstance instanceof Conference) {
+             $image = $entityInstance->getImage() ?? new Image();
+            $entityInstance->setImage($image);
+
+            if (!$image) {
+                $image = new Image();
+                $entityInstance->setImage($image);
+            }
+
+            $file = $image->getFile() ?? null;
+           
+            // dd($image);
+            if ($file instanceof UploadedFile) {
+                $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+                $chemin = $this->getParameter('photo_directory');
+                $file->move($chemin, $fileName);
+                $image->setUrl('uploads/images/' . $fileName);
+            }
+
+            if (!$image->getAlt()) {
+                $image->setAlt('Image de la conférence');
+            }
+
+            $entityManager->persist($image);
+        }
+        parent::persistEntity($entityManager, $entityInstance);
+    }
+    
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
@@ -63,7 +94,7 @@ class ConferenceCrudController extends AbstractCrudController
             // dd($image);
             if ($file instanceof UploadedFile) {
                 $fileName = md5(uniqid()) . '.' . $file->guessExtension();
-                $chemin = $_SERVER['DOCUMENT_ROOT'].'/uploads/images';
+                $chemin = $this->getParameter('photo_directory');
                 $file->move($chemin, $fileName);
                 $image->setUrl('uploads/images/' . $fileName);
             }

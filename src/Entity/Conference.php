@@ -77,6 +77,9 @@ class Conference
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
 
     public function __construct()
     {
@@ -321,6 +324,18 @@ class Conference
     public function setReservations(?Collection $reservations): static
     {
         $this->reservations = $reservations;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

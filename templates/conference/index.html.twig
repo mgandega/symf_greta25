@@ -15,8 +15,9 @@
     </ul>
     <a href="{{path('contact.sendMessage')}}">contact</a>
     </div>
+    <div class="col-sm-9">
 {% for conference in conferences %}
-    <div class="col-sm-3">
+    <div class="col-sm-3" style="display:inline-block; vertical-align:top">
   
     <img src="{{ asset(conference.image.url) }}" width="200" />
     <h5>{{ conference.titre|char}}</h5> 
@@ -24,12 +25,18 @@
     <p><b>lieu: </b> {{ conference.lieu}}</p>
     <p><b>prix: </b> {{ conference.prix}}</p>
     <p>{{ conference.date|date("d m Y h:i:s")}}</p>
+    <b>categorie: </b>
     {% for categorie in conference.categorie %}
-        <p><b>categorie: </b>{{ categorie.nom }}</p>
+        <p>{{ categorie.nom }}</p>
       {% endfor %}
     <a href="{{ path('app_conference.details', {'id':conference.id})}}">details</a>
     </div>
 {% endfor %}
+<div style="margin-top:30px;">
+{{ pagerfanta(pager, 'twitter_bootstrap5', {'omitFirstPage': true}) }}
 </div>
+</div>
+</div>
+
 </div>
 {% endblock %}

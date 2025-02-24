@@ -89,4 +89,9 @@ class ConferenceRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function createBlogListQueryBuilder(){
+        $qb = $this->createQueryBuilder('c')
+            ->innerJoin('c.categorie', 'cat');
+        return $qb->getQuery();
+    }
 }
